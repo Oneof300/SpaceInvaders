@@ -34,13 +34,13 @@ namespace SpaceInvaders {
 
     space.addChild(motherShip);
 
-    for (var y: number = 0; y < 5; ++y) {
-      for (var x: number = 0; x < 11; ++x) {
-        var invader: ƒ.Node = new ƒ.Node("Invader" + (x + y * 11));
+    for (let column: number = 0; column < 5; ++column) {
+      for (let row: number = 0; row < 11; ++row) {
+        let invader: ƒ.Node = new ƒ.Node("Invader" + (row + column * 11));
 
         invader.addComponent(new ƒ.ComponentTransform());
-        invader.getComponent(ƒ.ComponentTransform).mtxLocal.translateX((x - 5) * 15 / 13);
-        invader.getComponent(ƒ.ComponentTransform).mtxLocal.translateY((y * 15 + 65) / 13);
+        invader.getComponent(ƒ.ComponentTransform).mtxLocal.translateX((row - 5) * 15 / 13);
+        invader.getComponent(ƒ.ComponentTransform).mtxLocal.translateY((column * 15 + 65) / 13);
 
         invader.addComponent(new ƒ.ComponentMesh(quadMesh));
         invader.getComponent(ƒ.ComponentMesh).mtxPivot.scaleX(12 / 13);
@@ -52,31 +52,30 @@ namespace SpaceInvaders {
       }
     }
 
-    var barricadeStripeCount: number = 21;
-    var barricadeStripeHeights: number[] = [14, 15, 16, 17, 17, 12, 11, 10, 9, 8, 8, 8, 9, 10, 11, 12, 17, 17, 16, 15, 14];
-    var barricadeStripeYOffsets: number[] = [-1.5, -1, -0.5, 0, 0, 2.5, 3, 3.5, 4, 4.5, 4.5, 4.5, 4, 3.5, 3, 2.5, 0, 0, -0.5, -1, -1.5];
+    let barricadeStripeCount: number = 21;
+    let barricadeStripeHeights: number[] = [14, 15, 16, 17, 17, 12, 11, 10, 9, 8, 8, 8, 9, 10, 11, 12, 17, 17, 16, 15, 14];
+    let barricadeStripeYOffsets: number[] = [-1.5, -1, -0.5, 0, 0, 2.5, 3, 3.5, 4, 4.5, 4.5, 4.5, 4, 3.5, 3, 2.5, 0, 0, -0.5, -1, -1.5];
 
-    // tslint:disable-next-line: no-duplicate-variable
-    for (var x: number = 0; x < 4; ++x) {
-      var barricade: ƒ.Node = new ƒ.Node("Barricade" + x);
+    for (let barricadeIndex: number = 0; barricadeIndex < 4; ++barricadeIndex) {
+      let barricade: ƒ.Node = new ƒ.Node("Barricade" + barricadeIndex);
       
       barricade.addComponent(new ƒ.ComponentTransform());
-      barricade.getComponent(ƒ.ComponentTransform).mtxLocal.translateX((x - 1.5) * 53 / 13);
+      barricade.getComponent(ƒ.ComponentTransform).mtxLocal.translateX((barricadeIndex - 1.5) * 53 / 13);
       barricade.getComponent(ƒ.ComponentTransform).mtxLocal.translateY(24 / 13);
 
-      for (var x2: number; x < barricadeStripeCount; ++x) {
-        var barricadeStripe: ƒ.Node = new ƒ.Node("BarricadeStripe" + (x2 + x * barricadeStripeCount));
+      for (let barricadeStripeIndex: number = 0; barricadeStripeIndex < barricadeStripeCount; ++barricadeStripeIndex) {
+        let barricadeStripe: ƒ.Node = new ƒ.Node("BarricadeStripe" + (barricadeStripeIndex + barricadeIndex * barricadeStripeCount));
         
-        var posX: number = x - (barricadeStripeCount - 1) / 2;
-        var scaleX: number = 21 / (barricadeStripeCount * 13);
+        let posX: number = barricadeStripeIndex - (barricadeStripeCount - 1) / 2;
+        let scaleX: number = 21 / (barricadeStripeCount * 13);
 
         barricadeStripe.addComponent(new ƒ.ComponentTransform());
         barricadeStripe.getComponent(ƒ.ComponentTransform).mtxLocal.translateX(posX * scaleX);
-        barricadeStripe.getComponent(ƒ.ComponentTransform).mtxLocal.translateY(barricadeStripeYOffsets[x] / 13);
+        barricadeStripe.getComponent(ƒ.ComponentTransform).mtxLocal.translateY(barricadeStripeYOffsets[barricadeStripeIndex] / 13);
 
         barricadeStripe.addComponent(new ƒ.ComponentMesh(quadMesh));
         barricadeStripe.getComponent(ƒ.ComponentMesh).mtxPivot.scaleX(scaleX);
-        barricadeStripe.getComponent(ƒ.ComponentMesh).mtxPivot.scaleY(barricadeStripeHeights[x] / 13);
+        barricadeStripe.getComponent(ƒ.ComponentMesh).mtxPivot.scaleY(barricadeStripeHeights[barricadeStripeIndex] / 13);
 
         barricadeStripe.addComponent(new ƒ.ComponentMaterial(material));
 
