@@ -6,12 +6,7 @@ namespace SpaceInvaders {
     private static count: number = 0;
 
     constructor(_pos: ƒ.Vector2) {
-      let scale: ƒ.Vector2 = new ƒ.Vector2();
-      scale.x = 12 / 13;
-      scale.y = 8 / 13;
-
-      super("Invader" + (++Invader.count), _pos, scale);
-
+      super("Invader" + (++Invader.count), _pos, new ƒ.Vector2(12 / 13, 8 / 13));
       this.getComponent(ƒ.ComponentMaterial).clrPrimary = Invader.color;
     }
   }

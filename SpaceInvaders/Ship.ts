@@ -8,8 +8,8 @@ namespace SpaceInvaders {
       private ship: QuadNode;
       private projectiles: ProjectilePool;
 
-      private readonly vel: number = 14 / 1000;
-      private readonly moveRange: number = 7;
+      private readonly vel: number = 10 / 1000;
+      private readonly moveRange: number = 91 / 13;
       private dir: number = 0;
 
       private readonly moveLeftKeys: string[] = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
@@ -94,7 +94,7 @@ namespace SpaceInvaders {
       }
 
       private move(_dir: number): void {
-        this.dir = _dir;
+        this.dir = _dir < 0 ? -1 : _dir > 0 ? 1 : 0;
       }
     }
   }

@@ -7,7 +7,9 @@ namespace SpaceInvaders {
 
       onDeactivate?: () => void;
 
-      private readonly vel: number = 7 / 1000;
+      private readonly vel: number = 10 / 1000;
+      private readonly borderTop: number = 13;
+      private readonly borderBot: number = -1;
       private dir: number;
   
       constructor() {  
@@ -31,7 +33,10 @@ namespace SpaceInvaders {
       private update(_event: Event): void {
         if (this.isActive) {
           this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
-          if (this.mtxLocal.translation.y > 13 || this.mtxLocal.translation.y < -1) this.activate(false);
+
+          // deactivate projectile if it passes the borders
+          if (this.mtxLocal.translation.y > this.borderTop || this.mtxLocal.translation.y < this.borderBot)
+            this.activate(false);
         }
       }
     }

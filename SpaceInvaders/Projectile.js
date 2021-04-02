@@ -5,7 +5,9 @@ var SpaceInvaders;
     class Projectile extends SpaceInvaders.QuadNode {
         constructor() {
             super("Projectile" + (++Projectile.count), ƒ.Vector2.ZERO(), new ƒ.Vector2(1 / 13, 5 / 13));
-            this.vel = 7 / 1000;
+            this.vel = 10 / 1000;
+            this.borderTop = 13;
+            this.borderBot = -1;
             this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, (_event) => this.update(_event));
         }
@@ -22,7 +24,8 @@ var SpaceInvaders;
         update(_event) {
             if (this.isActive) {
                 this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
-                if (this.mtxLocal.translation.y > 13 || this.mtxLocal.translation.y < -1)
+                // deactivate projectile if it passes the borders
+                if (this.mtxLocal.translation.y > this.borderTop || this.mtxLocal.translation.y < this.borderBot)
                     this.activate(false);
             }
         }

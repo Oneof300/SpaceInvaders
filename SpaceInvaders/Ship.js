@@ -5,8 +5,8 @@ var SpaceInvaders;
     class Ship extends ƒ.Node {
         constructor() {
             super("Ship");
-            this.vel = 14 / 1000;
-            this.moveRange = 7;
+            this.vel = 10 / 1000;
+            this.moveRange = 91 / 13;
             this.dir = 0;
             this.moveLeftKeys = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
             this.moveRightKeys = [ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D];
@@ -83,7 +83,7 @@ var SpaceInvaders;
             this.projectiles.fireProjectile(this.ship.mtxLocal.translation, 1);
         }
         move(_dir) {
-            this.dir = _dir;
+            this.dir = _dir < 0 ? -1 : _dir > 0 ? 1 : 0;
         }
     }
     Ship.color = new ƒ.Color(0, 0.5, 1, 1);

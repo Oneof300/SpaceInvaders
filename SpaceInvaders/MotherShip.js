@@ -4,13 +4,7 @@ var SpaceInvaders;
     var ƒ = FudgeCore;
     class MotherShip extends SpaceInvaders.QuadNode {
         constructor() {
-            let pos = new ƒ.Vector2();
-            pos.x = 75 / 13;
-            pos.y = 140 / 13;
-            let scale = new ƒ.Vector2();
-            scale.x = 14 / 13;
-            scale.y = 7 / 13;
-            super("MotherShip", pos, scale);
+            super("MotherShip", new ƒ.Vector2(75 / 13, 140 / 13), new ƒ.Vector2(14 / 13, 7 / 13));
             this.getComponent(ƒ.ComponentMaterial).clrPrimary = MotherShip.color;
         }
         static get instance() {

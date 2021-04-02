@@ -10,7 +10,7 @@ var SpaceInvaders;
             this.mtxLocal.translateY(_pos.y);
             for (let stripeIndex = 0; stripeIndex < Barricade.stripeCount; ++stripeIndex) {
                 let id = stripeIndex + Barricade.count * Barricade.stripeCount;
-                let width = 21 / (Barricade.stripeCount * 13);
+                let width = Barricade.width / Barricade.stripeCount;
                 let pos = new ƒ.Vector2();
                 pos.x = (stripeIndex - (Barricade.stripeCount - 1) / 2) * width;
                 pos.y = Barricade.stripeYOffsets[stripeIndex] / 13;
@@ -24,10 +24,11 @@ var SpaceInvaders;
         }
     }
     Barricade.color = new ƒ.Color(0.5, 0.5, 0.5, 1);
+    Barricade.width = 24 / 13;
+    Barricade.stripeCount = 24;
+    Barricade.stripeHeights = [13, 14, 15, 16, 17, 17, 15, 14, 13, 13, 13, 13, 13, 13, 13, 13, 14, 15, 17, 17, 16, 15, 14, 13];
+    Barricade.stripeYOffsets = [-2, -1.5, -1, -0.5, 0, 0, 1, 1.5, 2, 2, 2, 2, 2, 2, 2, 2, 1.5, 1, 0, 0, -0.5, -1, -1.5, -2];
     Barricade.count = 0;
-    Barricade.stripeCount = 21;
-    Barricade.stripeHeights = [14, 15, 16, 17, 17, 12, 11, 10, 9, 8, 8, 8, 9, 10, 11, 12, 17, 17, 16, 15, 14];
-    Barricade.stripeYOffsets = [-1.5, -1, -0.5, 0, 0, 2.5, 3, 3.5, 4, 4.5, 4.5, 4.5, 4, 3.5, 3, 2.5, 0, 0, -0.5, -1, -1.5];
     SpaceInvaders.Barricade = Barricade;
 })(SpaceInvaders || (SpaceInvaders = {}));
 //# sourceMappingURL=Barricade.js.map

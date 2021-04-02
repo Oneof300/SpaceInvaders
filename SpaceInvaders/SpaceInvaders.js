@@ -15,8 +15,8 @@ var SpaceInvaders;
         for (let row = 0; row < rowCount; ++row) {
             for (let column = 0; column < columnCount; ++column) {
                 let pos = new ƒ.Vector2();
-                pos.x = (column - (columnCount - 1) / 2) * 15 / 13;
-                pos.y = (row * 15 + 65) / 13;
+                pos.x = (column - (columnCount - 1) / 2) * 16 / 13;
+                pos.y = (row * 16 + 65) / 13;
                 invaders.addChild(new SpaceInvaders.Invader(pos));
             }
         }
@@ -25,7 +25,7 @@ var SpaceInvaders;
         let barricadeCount = 4;
         for (let barricadeIndex = 0; barricadeIndex < barricadeCount; ++barricadeIndex) {
             let pos = new ƒ.Vector2();
-            pos.x = (barricadeIndex - (barricadeCount - 1) / 2) * 53 / 13;
+            pos.x = (barricadeIndex - (barricadeCount - 1) / 2) * 48 / 13;
             pos.y = 24 / 13;
             barricades.addChild(new SpaceInvaders.Barricade(pos));
         }
@@ -34,6 +34,7 @@ var SpaceInvaders;
         cmpCamera.mtxPivot.translateZ(18);
         cmpCamera.mtxPivot.translateY(77 / 13);
         cmpCamera.mtxPivot.rotateY(180);
+        cmpCamera.mtxPivot.scaleX(1);
         console.log(cmpCamera);
         viewport.initialize("Viewport", space, cmpCamera, canvas);
         viewport.draw();

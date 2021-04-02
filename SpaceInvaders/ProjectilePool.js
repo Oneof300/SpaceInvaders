@@ -5,16 +5,23 @@ var SpaceInvaders;
     class ProjectilePool extends ƒ.Node {
         constructor(_size) {
             super("ProjectilePool");
-            this.inactiveProjectiles = new Array();
             for (let i = 0; i < _size; ++i) {
                 let projectile = new SpaceInvaders.Projectile();
-                projectile.onDeactivate = () => this.inactiveProjectiles.push(projectile);
                 projectile.activate(false);
                 this.addChild(projectile);
             }
         }
         fireProjectile(_pos, _dir) {
-            this.inactiveProjectiles.pop()?.fire(_pos, _dir);
+            let inactiveProjectile;
+            // try to find an inactive projectile
+            for (let projectile of this.getChildren()) {
+                if (!projectile.isActive) {
+                    inactiveProjectile = projectile;
+                    break;
+                }
+            }
+            if (inactiveProjectile != undefined)
+                inactiveProjectile.fire(_pos, _dir);
         }
     }
     SpaceInvaders.ProjectilePool = ProjectilePool;

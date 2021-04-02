@@ -18,8 +18,8 @@ namespace SpaceInvaders {
     for (let row: number = 0; row < rowCount; ++row) {
       for (let column: number = 0; column < columnCount; ++column) {
         let pos: ƒ.Vector2 = new ƒ.Vector2();
-        pos.x = (column - (columnCount - 1) / 2) * 15 / 13;
-        pos.y = (row * 15 + 65) / 13;
+        pos.x = (column - (columnCount - 1) / 2) * 16 / 13;
+        pos.y = (row * 16 + 65) / 13;
 
         invaders.addChild(new Invader(pos));
       }
@@ -32,7 +32,7 @@ namespace SpaceInvaders {
 
     for (let barricadeIndex: number = 0; barricadeIndex < barricadeCount; ++barricadeIndex) {
       let pos: ƒ.Vector2 = new ƒ.Vector2();
-      pos.x = (barricadeIndex - (barricadeCount - 1) / 2) * 53 / 13;
+      pos.x = (barricadeIndex - (barricadeCount - 1) / 2) * 48 / 13;
       pos.y = 24 / 13;
       
       barricades.addChild(new Barricade(pos));
@@ -44,6 +44,7 @@ namespace SpaceInvaders {
     cmpCamera.mtxPivot.translateZ(18);
     cmpCamera.mtxPivot.translateY(77 / 13);
     cmpCamera.mtxPivot.rotateY(180);
+    cmpCamera.mtxPivot.scaleX(1);
     console.log(cmpCamera);
 
     viewport.initialize("Viewport", space, cmpCamera, canvas);
