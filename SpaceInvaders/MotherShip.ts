@@ -2,8 +2,8 @@ namespace SpaceInvaders {
     import ƒ = FudgeCore;
     
     export class MotherShip extends QuadNode {
-      static instance: MotherShip;
-      static material: ƒ.Material = new ƒ.Material("MotherShipMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(1, 0.2, 0.2, 1)));
+      static readonly color: ƒ.Color = new ƒ.Color(0.8, 0.1, 0.1, 1);
+      private static _instance: MotherShip;
   
       private constructor() {
         let pos: ƒ.Vector2 = new ƒ.Vector2();
@@ -16,12 +16,12 @@ namespace SpaceInvaders {
   
         super("MotherShip", pos, scale);
   
-        this.addComponent(new ƒ.ComponentMaterial(MotherShip.material));
+        this.getComponent(ƒ.ComponentMaterial).clrPrimary = MotherShip.color;
       }
 
-      static getInstance(): Invader {
-        if (this.instance == null) this.instance = new MotherShip();
-        return this.instance;
+      static get instance(): MotherShip {
+        if (this._instance == null) this._instance = new MotherShip();
+        return this._instance;
       }
     }
   }

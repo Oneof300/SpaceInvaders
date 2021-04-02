@@ -3,6 +3,7 @@ namespace SpaceInvaders {
   
   export class QuadNode extends ƒ.Node {
     static mesh: ƒ.Mesh = new ƒ.MeshQuad("Quad");
+    static material: ƒ.Material = new ƒ.Material("UniColor", ƒ.ShaderUniColor, new ƒ.CoatColored());
 
     constructor(_name: string, _pos: ƒ.Vector2, _scale: ƒ.Vector2) {
       super(_name);
@@ -15,6 +16,8 @@ namespace SpaceInvaders {
       cmpMesh.mtxPivot.scaleX(_scale.x);
       cmpMesh.mtxPivot.scaleY(_scale.y);
       this.addComponent(cmpMesh);
+
+      this.addComponent(new ƒ.ComponentMaterial(QuadNode.material));
     }
   }
 }

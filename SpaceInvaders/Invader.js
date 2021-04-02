@@ -8,10 +8,10 @@ var SpaceInvaders;
             scale.x = 12 / 13;
             scale.y = 8 / 13;
             super("Invader" + (++Invader.count), _pos, scale);
-            this.addComponent(new ƒ.ComponentMaterial(Invader.material));
+            this.getComponent(ƒ.ComponentMaterial).clrPrimary = Invader.color;
         }
     }
-    Invader.material = new ƒ.Material("InvaderMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0.5, 1, 0.1, 1)));
+    Invader.color = new ƒ.Color(0, 0.6, 0.4, 1);
     Invader.count = 0;
     SpaceInvaders.Invader = Invader;
 })(SpaceInvaders || (SpaceInvaders = {}));

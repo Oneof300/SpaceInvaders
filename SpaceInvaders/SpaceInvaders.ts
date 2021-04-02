@@ -8,8 +8,8 @@ namespace SpaceInvaders {
 
     let space: ƒ.Node = new ƒ.Node("Space");
     
-    space.addChild(Ship.getInstance());
-    space.addChild(MotherShip.getInstance());
+    space.addChild(Ship.instance);
+    space.addChild(MotherShip.instance);
 
     let invaders: ƒ.Node = new ƒ.Node("Invaders");
     let columnCount: number = 11;
@@ -40,22 +40,6 @@ namespace SpaceInvaders {
 
     space.addChild(barricades);
 
-    let projectiles: ƒ.Node = new ƒ.Node("Projectiles");
-
-    let projectile0Pos: ƒ.Vector2 = new ƒ.Vector2();
-    projectile0Pos.x = 0;
-    projectile0Pos.y = 1;
-
-    projectiles.addChild(new Projectile(projectile0Pos));
-
-    let projectile1Pos: ƒ.Vector2 = new ƒ.Vector2();
-    projectile1Pos.x = -45 / 13;
-    projectile1Pos.y = 4;
-
-    projectiles.addChild(new Projectile(projectile1Pos));
-
-    space.addChild(projectiles);
-
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     cmpCamera.mtxPivot.translateZ(18);
     cmpCamera.mtxPivot.translateY(77 / 13);
@@ -66,5 +50,13 @@ namespace SpaceInvaders {
     viewport.draw();
 
     console.log(space);
+
+    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
+    ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
+  }
+
+  function update(_event: Event): void {
+    // console.log(_event);
+    viewport.draw();
   }
 }

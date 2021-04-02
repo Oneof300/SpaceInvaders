@@ -2,7 +2,7 @@ namespace SpaceInvaders {
     import ƒ = FudgeCore;
     
     export class Barricade extends ƒ.Node {
-      static material: ƒ.Material = new ƒ.Material("BarricadeMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0.6, 0.4, 0.4, 1)));
+      static readonly color: ƒ.Color = new ƒ.Color(0.5, 0.5, 0.5, 1);
       
       private static count: number = 0;
       private static stripeCount: number = 21;
@@ -17,21 +17,21 @@ namespace SpaceInvaders {
         this.mtxLocal.translateY(_pos.y);
 
         for (let stripeIndex: number = 0; stripeIndex < Barricade.stripeCount; ++stripeIndex) {
-            let id: number = stripeIndex + Barricade.count * Barricade.stripeCount;
-            let width: number = 21 / (Barricade.stripeCount * 13);
+          let id: number = stripeIndex + Barricade.count * Barricade.stripeCount;
+          let width: number = 21 / (Barricade.stripeCount * 13);
 
-            let pos: ƒ.Vector2 = new ƒ.Vector2();
-            pos.x = (stripeIndex - (Barricade.stripeCount - 1) / 2) * width;
-            pos.y = Barricade.stripeYOffsets[stripeIndex] / 13;
+          let pos: ƒ.Vector2 = new ƒ.Vector2();
+          pos.x = (stripeIndex - (Barricade.stripeCount - 1) / 2) * width;
+          pos.y = Barricade.stripeYOffsets[stripeIndex] / 13;
 
-            let scale: ƒ.Vector2 = new ƒ.Vector2();
-            scale.x = width;
-            scale.y = Barricade.stripeHeights[stripeIndex] / 13;
+          let scale: ƒ.Vector2 = new ƒ.Vector2();
+          scale.x = width;
+          scale.y = Barricade.stripeHeights[stripeIndex] / 13;
 
-            let stripe: ƒ.Node = new QuadNode("BarricadeStripe" + id, pos, scale);
-            stripe.addComponent(new ƒ.ComponentMaterial(Barricade.material));
+          let stripe: QuadNode = new QuadNode("BarricadeStripe" + id, pos, scale);
+          stripe.getComponent(ƒ.ComponentMaterial).clrPrimary = Barricade.color;
 
-            this.addChild(stripe);
+          this.addChild(stripe);
         }
       }
     }

@@ -11,15 +11,15 @@ var SpaceInvaders;
             scale.x = 14 / 13;
             scale.y = 7 / 13;
             super("MotherShip", pos, scale);
-            this.addComponent(new ƒ.ComponentMaterial(MotherShip.material));
+            this.getComponent(ƒ.ComponentMaterial).clrPrimary = MotherShip.color;
         }
-        static getInstance() {
-            if (this.instance == null)
-                this.instance = new MotherShip();
-            return this.instance;
+        static get instance() {
+            if (this._instance == null)
+                this._instance = new MotherShip();
+            return this._instance;
         }
     }
-    MotherShip.material = new ƒ.Material("MotherShipMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(1, 0.2, 0.2, 1)));
+    MotherShip.color = new ƒ.Color(0.8, 0.1, 0.1, 1);
     SpaceInvaders.MotherShip = MotherShip;
 })(SpaceInvaders || (SpaceInvaders = {}));
 //# sourceMappingURL=MotherShip.js.map

@@ -18,12 +18,12 @@ var SpaceInvaders;
                 scale.x = width;
                 scale.y = Barricade.stripeHeights[stripeIndex] / 13;
                 let stripe = new SpaceInvaders.QuadNode("BarricadeStripe" + id, pos, scale);
-                stripe.addComponent(new ƒ.ComponentMaterial(Barricade.material));
+                stripe.getComponent(ƒ.ComponentMaterial).clrPrimary = Barricade.color;
                 this.addChild(stripe);
             }
         }
     }
-    Barricade.material = new ƒ.Material("BarricadeMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0.6, 0.4, 0.4, 1)));
+    Barricade.color = new ƒ.Color(0.5, 0.5, 0.5, 1);
     Barricade.count = 0;
     Barricade.stripeCount = 21;
     Barricade.stripeHeights = [14, 15, 16, 17, 17, 12, 11, 10, 9, 8, 8, 8, 9, 10, 11, 12, 17, 17, 16, 15, 14];

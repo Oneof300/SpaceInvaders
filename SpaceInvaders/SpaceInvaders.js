@@ -7,8 +7,8 @@ var SpaceInvaders;
     function init(_event) {
         const canvas = document.querySelector("canvas");
         let space = new ƒ.Node("Space");
-        space.addChild(SpaceInvaders.Ship.getInstance());
-        space.addChild(SpaceInvaders.MotherShip.getInstance());
+        space.addChild(SpaceInvaders.Ship.instance);
+        space.addChild(SpaceInvaders.MotherShip.instance);
         let invaders = new ƒ.Node("Invaders");
         let columnCount = 11;
         let rowCount = 5;
@@ -30,16 +30,6 @@ var SpaceInvaders;
             barricades.addChild(new SpaceInvaders.Barricade(pos));
         }
         space.addChild(barricades);
-        let projectiles = new ƒ.Node("Projectiles");
-        let projectile0Pos = new ƒ.Vector2();
-        projectile0Pos.x = 0;
-        projectile0Pos.y = 1;
-        projectiles.addChild(new SpaceInvaders.Projectile(projectile0Pos));
-        let projectile1Pos = new ƒ.Vector2();
-        projectile1Pos.x = -45 / 13;
-        projectile1Pos.y = 4;
-        projectiles.addChild(new SpaceInvaders.Projectile(projectile1Pos));
-        space.addChild(projectiles);
         let cmpCamera = new ƒ.ComponentCamera();
         cmpCamera.mtxPivot.translateZ(18);
         cmpCamera.mtxPivot.translateY(77 / 13);
@@ -48,6 +38,12 @@ var SpaceInvaders;
         viewport.initialize("Viewport", space, cmpCamera, canvas);
         viewport.draw();
         console.log(space);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
+        ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
+    }
+    function update(_event) {
+        // console.log(_event);
+        viewport.draw();
     }
 })(SpaceInvaders || (SpaceInvaders = {}));
 //# sourceMappingURL=SpaceInvaders.js.map

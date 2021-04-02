@@ -2,17 +2,37 @@ namespace SpaceInvaders {
     import ƒ = FudgeCore;
     
     export class Projectile extends QuadNode {
-      static material: ƒ.Material = new ƒ.Material("ProjectileMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(1, 1, 1, 1)));
+      static readonly color: ƒ.Color = new ƒ.Color(0.2, 0.8, 1, 1);
       private static count: number = 0;
+
+      onDeactivate?: () => void;
+
+      private readonly vel: number = 7 / 1000;
+      private dir: number;
   
-      constructor(_pos: ƒ.Vector2) {
-        let scale: ƒ.Vector2 = new ƒ.Vector2();
-        scale.x = 1 / 13;
-        scale.y = 5 / 13;
-  
-        super("Projectile" + (++Projectile.count), _pos, scale);
-  
-        this.addComponent(new ƒ.ComponentMaterial(Projectile.material));
+      constructor() {  
+        super("Projectile" + (++Projectile.count), ƒ.Vector2.ZERO(), new ƒ.Vector2(1 / 13, 5 / 13));
+        this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
+
+        ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
+      }
+
+      fire(_pos: ƒ.Vector3, _dir: number): void {
+        this.mtxLocal.translation = _pos;
+        this.dir = _dir < 0 ? -1 : 1;
+        this.activate(true);
+      }
+
+      activate(_on: boolean): void {
+        super.activate(_on);
+        if (!_on) this.onDeactivate?.call(null);
+      }
+
+      private update(_event: Event): void {
+        if (this.isActive) {
+          this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
+          if (this.mtxLocal.translation.y > 13 || this.mtxLocal.translation.y < -1) this.activate(false);
+        }
       }
     }
   }

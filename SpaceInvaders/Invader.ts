@@ -2,7 +2,7 @@ namespace SpaceInvaders {
   import ƒ = FudgeCore;
   
   export class Invader extends QuadNode {
-    static material: ƒ.Material = new ƒ.Material("InvaderMat", ƒ.ShaderUniColor, new ƒ.CoatColored(new ƒ.Color(0.5, 1, 0.1, 1)));
+    static readonly color: ƒ.Color = new ƒ.Color(0, 0.6, 0.4, 1);
     private static count: number = 0;
 
     constructor(_pos: ƒ.Vector2) {
@@ -12,7 +12,7 @@ namespace SpaceInvaders {
 
       super("Invader" + (++Invader.count), _pos, scale);
 
-      this.addComponent(new ƒ.ComponentMaterial(Invader.material));
+      this.getComponent(ƒ.ComponentMaterial).clrPrimary = Invader.color;
     }
   }
 }

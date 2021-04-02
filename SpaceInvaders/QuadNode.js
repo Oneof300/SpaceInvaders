@@ -12,9 +12,11 @@ var SpaceInvaders;
             cmpMesh.mtxPivot.scaleX(_scale.x);
             cmpMesh.mtxPivot.scaleY(_scale.y);
             this.addComponent(cmpMesh);
+            this.addComponent(new ƒ.ComponentMaterial(QuadNode.material));
         }
     }
     QuadNode.mesh = new ƒ.MeshQuad("Quad");
+    QuadNode.material = new ƒ.Material("UniColor", ƒ.ShaderUniColor, new ƒ.CoatColored());
     SpaceInvaders.QuadNode = QuadNode;
 })(SpaceInvaders || (SpaceInvaders = {}));
 //# sourceMappingURL=QuadNode.js.map
