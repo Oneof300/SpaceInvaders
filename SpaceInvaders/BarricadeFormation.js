@@ -4,7 +4,7 @@ var SpaceInvaders;
     var ƒ = FudgeCore;
     class BarricadeFormation extends SpaceInvaders.CollidableNode {
         constructor(_pos, _barricadeCount, _spacing) {
-            super("BarricadeFormation", _pos, new ƒ.Vector2((_barricadeCount - 1) * _spacing + SpaceInvaders.Barricade.width, SpaceInvaders.Barricade.height));
+            super("BarricadeFormation", _pos, new ƒ.Vector2((_barricadeCount - 1) * _spacing + SpaceInvaders.Barricade.width, SpaceInvaders.Barricade.height), new ƒ.Vector2(-((_barricadeCount - 1) * _spacing + SpaceInvaders.Barricade.width) / 2, 0));
             for (let barricadeIndex = 0; barricadeIndex < _barricadeCount; ++barricadeIndex) {
                 this.addChild(new SpaceInvaders.Barricade(new ƒ.Vector2((barricadeIndex - (_barricadeCount - 1) / 2) * _spacing, 0)));
             }

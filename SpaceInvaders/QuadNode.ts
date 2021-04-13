@@ -14,7 +14,7 @@ namespace SpaceInvaders {
   
   export class QuadNode extends CollidableNode {
     static mesh: ƒ.Mesh = quadMesh;
-    static material: ƒ.Material = new ƒ.Material("UniColor", ƒ.ShaderUniColor, new ƒ.CoatColored());
+    static material: ƒ.Material = new ƒ.Material("QuadMat", ƒ.ShaderUniColor, new ƒ.CoatColored());
 
     private cmpMesh: ƒ.ComponentMesh;
 

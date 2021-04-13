@@ -31,7 +31,7 @@ var SpaceInvaders;
         }
     }
     QuadNode.mesh = quadMesh;
-    QuadNode.material = new ƒ.Material("UniColor", ƒ.ShaderUniColor, new ƒ.CoatColored());
+    QuadNode.material = new ƒ.Material("QuadMat", ƒ.ShaderUniColor, new ƒ.CoatColored());
     SpaceInvaders.QuadNode = QuadNode;
 })(SpaceInvaders || (SpaceInvaders = {}));
 //# sourceMappingURL=QuadNode.js.map

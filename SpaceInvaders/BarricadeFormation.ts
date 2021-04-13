@@ -5,7 +5,9 @@ namespace SpaceInvaders {
       private static _instance: BarricadeFormation;
   
       private constructor(_pos: ƒ.Vector2, _barricadeCount: number, _spacing: number) {
-        super("BarricadeFormation", _pos, new ƒ.Vector2((_barricadeCount - 1) * _spacing + Barricade.width, Barricade.height));
+        super("BarricadeFormation", _pos,
+              new ƒ.Vector2((_barricadeCount - 1) * _spacing + Barricade.width, Barricade.height),
+              new ƒ.Vector2(-((_barricadeCount - 1) * _spacing + Barricade.width) / 2, 0));
 
         for (let barricadeIndex: number = 0; barricadeIndex < _barricadeCount; ++barricadeIndex) {
           this.addChild(new Barricade(new ƒ.Vector2((barricadeIndex - (_barricadeCount - 1) / 2) * _spacing, 0)));

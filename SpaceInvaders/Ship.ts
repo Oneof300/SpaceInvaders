@@ -5,8 +5,11 @@ namespace SpaceInvaders {
       static readonly color: ƒ.Color = new ƒ.Color(0, 0.5, 1, 1);
       private static _instance: Ship;
 
-      private projectiles: ProjectilePool;
-      private readonly vel: number = 130 / 1000;
+      vel: number = 0.15;
+      projectiles: ProjectilePool = new ProjectilePool(1);
+      projectileVel: number = 0.15;
+
+      private shipsLeft: number = 3;
       private dir: HorizontalDirection = HorizontalDirection.none;
 
       private readonly moveLeftKeys: string[] = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
@@ -20,7 +23,6 @@ namespace SpaceInvaders {
         super("Ship", ƒ.Vector2.ZERO(), new ƒ.Vector2(13, 7));
 
         this.getComponent(ƒ.ComponentMaterial).clrPrimary = Ship.color;
-        this.projectiles = new ProjectilePool(3);
         space.addChild(this.projectiles);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
@@ -33,25 +35,34 @@ namespace SpaceInvaders {
         return this._instance;
       }
 
+      protected onCollision(_other: CollidableNode): void {
+        if (_other instanceof Projectile || _other instanceof Invader) {
+          if (--this.shipsLeft <= 0) gameState = GameState.over;
+          else this.mtxLocal.translateX(-this.mtxWorld.translation.x);
+          console.log("Ship got destroyed");
+        }
+      }
+
       private update(_event: Event): void {
-        if (this.dir != HorizontalDirection.none) {
+        if (gameState == GameState.running && this.dir != HorizontalDirection.none) {
           this.move();
         }
       }
 
       private move(): void {
         this.mtxLocal.translateX(this.dir * this.vel * ƒ.Loop.timeFrameReal);
+        this.mtxWorld.translation = this.mtxLocal.translation;
 
-        if (this.mtxLocal.translation.x > border.right) {
-          this.mtxLocal.translateX(border.right - this.mtxLocal.translation.x);
+        if (this.right > border.right) {
+          this.mtxLocal.translateX(border.right - this.right);
         }
-        else if (this.mtxLocal.translation.x < border.left) {
-          this.mtxLocal.translateX(border.left - this.mtxLocal.translation.x);
+        else if (this.left < border.left) {
+          this.mtxLocal.translateX(border.left - this.left);
         }
       }
 
       private fire(): void {
-        this.projectiles.fireProjectile(this.mtxWorld.translation.toVector2(), VerticalDirection.up);
+        this.projectiles.fireProjectile(this.mtxWorld.translation.toVector2(), VerticalDirection.up, this.projectileVel);
       }
 
       private handleKeyDown(_event: KeyboardEvent): void {

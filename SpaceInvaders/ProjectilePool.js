@@ -5,12 +5,24 @@ var SpaceInvaders;
     class ProjectilePool extends ƒ.Node {
         constructor(_size) {
             super("ProjectilePool");
-            for (let i = 0; i < _size; ++i) {
+            if (_size != undefined) {
+                for (let i = 0; i < _size; ++i) {
+                    this.addChild(new SpaceInvaders.Projectile());
+                }
+            }
+        }
+        get size() {
+            return this.nChildren;
+        }
+        set size(_value) {
+            if (this.nChildren > _value)
+                this.removeAllChildren();
+            while (this.nChildren < _value) {
                 this.addChild(new SpaceInvaders.Projectile());
             }
         }
-        fireProjectile(_pos, _dir) {
-            this.getChildren().find(p => !p.isActive)?.fire(_pos, _dir);
+        fireProjectile(_pos, _dir, _vel) {
+            this.getChildren().find(p => !p.isActive)?.fire(_pos, _dir, _vel);
         }
     }
     SpaceInvaders.ProjectilePool = ProjectilePool;

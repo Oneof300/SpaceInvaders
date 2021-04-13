@@ -4,10 +4,13 @@ namespace SpaceInvaders {
     export class InvaderWave extends CollidableNode {
       private static _instance: InvaderWave;
 
-      private projectiles: ProjectilePool;
+      velMax: number = 0.2;
+      projectiles: ProjectilePool = new ProjectilePool(1);
+      projectileVel: number = 0.1;
 
-      private readonly vel: number = 130 / 1000;
-      private dir: number = 0;
+      private dir: ƒ.Vector2 = Direction.right;
+      private readonly drop: number;
+      private targetedYPos: number;
   
       private constructor(_pos: ƒ.Vector2, _rows: number, _columns: number, _spacing: number) {
         super("InvaderWave", _pos, new ƒ.Vector2((_columns - 1) * _spacing + Invader.width, (_rows - 1) * _spacing + Invader.height));
@@ -21,11 +24,12 @@ namespace SpaceInvaders {
             this.addChild(new Invader(pos));
           }
         }
-
-        this.projectiles = new ProjectilePool(5);
         space.addChild(this.projectiles);
 
-        //ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
+        this.drop = _spacing;
+        this.targetedYPos = _pos.y;
+
+        ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
       }
 
       static get instance(): InvaderWave {
@@ -48,9 +52,49 @@ namespace SpaceInvaders {
       }
 
       private update(_event: Event): void {
-        if (this.dir != 0) {
-          this.mtxLocal.translateX(this.dir * this.vel * ƒ.Loop.timeFrameReal);
+        if (gameState == GameState.running) {
+          this.move();
+          this.fire();
+          this.updateDirection();
+          this.checkCollision();
         }
+      }
+
+      private move(): void {
+        let vel: number = this.velMax / this.nChildren;
+        this.mtxLocal.translateX(this.dir.x * vel * ƒ.Loop.timeFrameReal);
+        this.mtxLocal.translateY(this.dir.y * vel * ƒ.Loop.timeFrameReal);
+        this.mtxWorld.translation = this.mtxLocal.translation;
+      }
+
+      private updateDirection(): void {
+        if (this.dir == Direction.left && this.left <= border.left) {
+          this.mtxLocal.translateX(border.left - this.left);
+          this.dir = Direction.down;
+          this.targetedYPos -= this.drop;
+        }
+        else if (this.dir == Direction.right && this.right >= border.right) {
+          this.mtxLocal.translateX(border.right - this.right);
+          this.dir = Direction.down;
+          this.targetedYPos -= this.drop;
+        }
+        else if (this.dir == Direction.down && this.mtxLocal.translation.y <= this.targetedYPos) {
+          this.mtxLocal.translateY(this.targetedYPos - this.mtxLocal.translation.y);
+          this.dir = this.mtxLocal.translation.x > 0 ? Direction.left : Direction.right;
+        }
+      }
+
+      private fire(): void {
+        let pos: ƒ.Vector2 = this.getChild(Math.floor(Math.random() * this.nChildren))?.mtxWorld.translation.toVector2();
+        if (pos != undefined) this.projectiles.fireProjectile(pos, VerticalDirection.down, this.projectileVel);
+      }
+
+      private checkCollision(): void {
+        (this.getChildren() as Invader[])
+        .filter(invader => invader.collides(Ship.instance))
+        .reverse()
+        .forEach(invader => this.removeChild(invader));
+        if (this.bottom + Invader.height < Ship.instance.bottom) gameState = GameState.over;
       }
 
       private recalculateCollisionBox(): void {
@@ -61,9 +105,6 @@ namespace SpaceInvaders {
         let yPositions: number[] = this.getChildren().map(invader => invader.mtxWorld.translation.y);
         this.bottom = Math.min(...yPositions) - Invader.height / 2;
         this.top = Math.max(...yPositions) + Invader.height / 2;
-
-        console.log("recalculatedCollisionBox:");
-        console.log(this);
       }
     }
   }

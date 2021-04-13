@@ -5,7 +5,10 @@ var SpaceInvaders;
     class Ship extends SpaceInvaders.QuadNode {
         constructor() {
             super("Ship", ƒ.Vector2.ZERO(), new ƒ.Vector2(13, 7));
-            this.vel = 130 / 1000;
+            this.vel = 0.15;
+            this.projectiles = new SpaceInvaders.ProjectilePool(1);
+            this.projectileVel = 0.15;
+            this.shipsLeft = 3;
             this.dir = SpaceInvaders.HorizontalDirection.none;
             this.moveLeftKeys = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
             this.moveRightKeys = [ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D];
@@ -14,7 +17,6 @@ var SpaceInvaders;
             this.interestingKeys = this.moveKeys.concat(this.fireKeys);
             this.pressedKeys = new Array();
             this.getComponent(ƒ.ComponentMaterial).clrPrimary = Ship.color;
-            this.projectiles = new SpaceInvaders.ProjectilePool(3);
             SpaceInvaders.space.addChild(this.projectiles);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, (_event) => this.update(_event));
             window.addEventListener("keydown", (_event) => this.handleKeyDown(_event));
@@ -25,22 +27,32 @@ var SpaceInvaders;
                 this._instance = new Ship();
             return this._instance;
         }
+        onCollision(_other) {
+            if (_other instanceof SpaceInvaders.Projectile || _other instanceof SpaceInvaders.Invader) {
+                if (--this.shipsLeft <= 0)
+                    SpaceInvaders.gameState = SpaceInvaders.GameState.over;
+                else
+                    this.mtxLocal.translateX(-this.mtxWorld.translation.x);
+                console.log("Ship got destroyed");
+            }
+        }
         update(_event) {
-            if (this.dir != SpaceInvaders.HorizontalDirection.none) {
+            if (SpaceInvaders.gameState == SpaceInvaders.GameState.running && this.dir != SpaceInvaders.HorizontalDirection.none) {
                 this.move();
             }
         }
         move() {
             this.mtxLocal.translateX(this.dir * this.vel * ƒ.Loop.timeFrameReal);
-            if (this.mtxLocal.translation.x > SpaceInvaders.border.right) {
-                this.mtxLocal.translateX(SpaceInvaders.border.right - this.mtxLocal.translation.x);
+            this.mtxWorld.translation = this.mtxLocal.translation;
+            if (this.right > SpaceInvaders.border.right) {
+                this.mtxLocal.translateX(SpaceInvaders.border.right - this.right);
             }
-            else if (this.mtxLocal.translation.x < SpaceInvaders.border.left) {
-                this.mtxLocal.translateX(SpaceInvaders.border.left - this.mtxLocal.translation.x);
+            else if (this.left < SpaceInvaders.border.left) {
+                this.mtxLocal.translateX(SpaceInvaders.border.left - this.left);
             }
         }
         fire() {
-            this.projectiles.fireProjectile(this.mtxWorld.translation.toVector2(), SpaceInvaders.VerticalDirection.up);
+            this.projectiles.fireProjectile(this.mtxWorld.translation.toVector2(), SpaceInvaders.VerticalDirection.up, this.projectileVel);
         }
         handleKeyDown(_event) {
             // if we are interested in that key and it wasn't already pressed, add it to the pressed keys

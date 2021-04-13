@@ -65,9 +65,7 @@ namespace SpaceInvaders {
       this.updateCollisionBoxPosition();
       _other.updateCollisionBoxPosition();
       if (this.collisionBox.collides(_other.collisionBox)) {
-        console.log(this.name + " collided with " + _other.name);
-        console.log(this);
-        console.log(_other);
+        //console.log(this.name + " collided with " + _other.name);
         this.onCollision?.call(this, _other);
         _other.onCollision?.call(_other, this);
         return true;

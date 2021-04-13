@@ -2,7 +2,8 @@ namespace SpaceInvaders {
   import ƒ = FudgeCore;
 
   export const space: ƒ.Node = new ƒ.Node("Space");
-  export let border: Rectangle = new Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(182, 182));
+  export const border: Rectangle = new Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(194, 182));
+  export let gameState: GameState = GameState.running;
 
   let viewport: ƒ.Viewport = new ƒ.Viewport();
   window.addEventListener("load", init);
@@ -11,11 +12,18 @@ namespace SpaceInvaders {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
 
     console.log(border);
-    
+
     space.addChild(Ship.instance);
     space.addChild(MotherShip.instance);
-    space.addChild(InvaderWave.createWave(new ƒ.Vector2(0, 100), 5, 11, 16));
-    space.addChild(BarricadeFormation.createFormation(new ƒ.Vector2(0, 24.5), 4, 48));
+    space.addChild(InvaderWave.createWave(new ƒ.Vector2(0, 96), 5, 11, 16));
+    space.addChild(BarricadeFormation.createFormation(new ƒ.Vector2(0, 16), 4, 48));
+    
+    Ship.instance.vel = 0.2;
+    Ship.instance.projectiles.size = 2;
+    Ship.instance.projectileVel = 0.15;
+    InvaderWave.instance.velMax = 0.4;
+    InvaderWave.instance.projectiles.size = 2;
+    InvaderWave.instance.projectileVel = 0.1;
 
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     cmpCamera.mtxPivot.translateZ(234);

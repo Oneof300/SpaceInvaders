@@ -12,11 +12,9 @@ namespace SpaceInvaders {
       private static count: number = 0;
 
       constructor(_pos: ƒ.Vector2) {  
-        super("Barricade" + (++Barricade.count), _pos, new ƒ.Vector2(Barricade.width, Barricade.height));
+        super("Barricade" + (Barricade.count++), _pos, new ƒ.Vector2(Barricade.width, Barricade.height));
 
         for (let stripeIndex: number = 0; stripeIndex < Barricade.width; ++stripeIndex) {
-          let id: number = stripeIndex + Barricade.count * Barricade.width;
-
           let size: ƒ.Vector2 = new ƒ.Vector2();
           size.x = Barricade.stripeWidth;
           size.y = Barricade.stripeHeights[stripeIndex > 11 ? Barricade.width - 2 - stripeIndex : stripeIndex];
@@ -25,7 +23,7 @@ namespace SpaceInvaders {
           pos.x = (stripeIndex - (Barricade.width - 1) / 2) * Barricade.stripeWidth;
           pos.y = stripeIndex > 5 && stripeIndex < 18 ? Barricade.height - size.y : 0;
 
-          this.addChild(new BarricadeStripe(id, pos, size));
+          this.addChild(new BarricadeStripe(pos, size));
         }
       }
 

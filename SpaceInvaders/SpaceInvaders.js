@@ -3,7 +3,8 @@ var SpaceInvaders;
 (function (SpaceInvaders) {
     var ƒ = FudgeCore;
     SpaceInvaders.space = new ƒ.Node("Space");
-    SpaceInvaders.border = new SpaceInvaders.Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(182, 182));
+    SpaceInvaders.border = new SpaceInvaders.Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(194, 182));
+    SpaceInvaders.gameState = SpaceInvaders.GameState.running;
     let viewport = new ƒ.Viewport();
     window.addEventListener("load", init);
     function init(_event) {
@@ -11,8 +12,14 @@ var SpaceInvaders;
         console.log(SpaceInvaders.border);
         SpaceInvaders.space.addChild(SpaceInvaders.Ship.instance);
         SpaceInvaders.space.addChild(SpaceInvaders.MotherShip.instance);
-        SpaceInvaders.space.addChild(SpaceInvaders.InvaderWave.createWave(new ƒ.Vector2(0, 100), 5, 11, 16));
-        SpaceInvaders.space.addChild(SpaceInvaders.BarricadeFormation.createFormation(new ƒ.Vector2(0, 24.5), 4, 48));
+        SpaceInvaders.space.addChild(SpaceInvaders.InvaderWave.createWave(new ƒ.Vector2(0, 96), 5, 11, 16));
+        SpaceInvaders.space.addChild(SpaceInvaders.BarricadeFormation.createFormation(new ƒ.Vector2(0, 16), 4, 48));
+        SpaceInvaders.Ship.instance.vel = 0.2;
+        SpaceInvaders.Ship.instance.projectiles.size = 2;
+        SpaceInvaders.Ship.instance.projectileVel = 0.15;
+        SpaceInvaders.InvaderWave.instance.velMax = 0.4;
+        SpaceInvaders.InvaderWave.instance.projectiles.size = 2;
+        SpaceInvaders.InvaderWave.instance.projectileVel = 0.1;
         let cmpCamera = new ƒ.ComponentCamera();
         cmpCamera.mtxPivot.translateZ(234);
         cmpCamera.mtxPivot.translateY(77);

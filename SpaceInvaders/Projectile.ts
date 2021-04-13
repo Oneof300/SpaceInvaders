@@ -2,15 +2,17 @@ namespace SpaceInvaders {
     import ƒ = FudgeCore;
     
     export class Projectile extends QuadNode {
-      static readonly color: ƒ.Color = new ƒ.Color(0.2, 0.8, 1, 1);
+      static readonly colorShip: ƒ.Color = new ƒ.Color(0.2, 0.8, 1, 1);
+      static readonly colorInvader: ƒ.Color = new ƒ.Color(0, 1, 0.6, 1);
+      static readonly colorCollision: ƒ.Color = MotherShip.color;
       private static count: number = 0;
 
-      private readonly vel: number = 130 / 1000;
-      private _dir: VerticalDirection;
+      private vel: number;
+      private _dir: number;
+      private cmpMaterial: ƒ.ComponentMaterial = this.getComponent(ƒ.ComponentMaterial);
   
       constructor() {  
-        super("Projectile" + (++Projectile.count), ƒ.Vector2.ZERO(), new ƒ.Vector2(1, 5));
-        this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
+        super("Projectile" + (Projectile.count++), ƒ.Vector2.ZERO(), new ƒ.Vector2(1, 5));
         this.activate(false);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
@@ -20,23 +22,25 @@ namespace SpaceInvaders {
         return this._dir;
       }
 
-      fire(_pos: ƒ.Vector2, _dir: VerticalDirection): void {
-        this.mtxLocal.translateX(_pos.x - this.mtxLocal.translation.x);
-        this.mtxLocal.translateY(_pos.y - this.mtxLocal.translation.y);
+      fire(_pos: ƒ.Vector2, _dir: VerticalDirection, _vel: number): void {
+        this.mtxLocal.translateX(_pos.x - this.mtxWorld.translation.x);
+        this.mtxLocal.translateY(_pos.y - this.mtxWorld.translation.y);
+        this.cmpMaterial.clrPrimary = _dir > 0 ? Projectile.colorShip : Projectile.colorInvader;
+        this.vel = _vel;
         this._dir = _dir;
         this.activate(true);
       }
 
       protected onCollision(_other: CollidableNode): void {
-        if (_other instanceof Invader || _other instanceof BarricadeStripe) {
+        if (_other instanceof BarricadeStripe || _other instanceof Invader || _other instanceof Ship) {
           this.activate(false);
         }
-        this.getComponent(ƒ.ComponentMaterial).clrPrimary = MotherShip.color;
+        //this.cmpMaterial.clrPrimary = Projectile.colorCollision;
       }
 
       private update(_event: Event): void {
         if (this.isActive) {
-          this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
+          //this.cmpMaterial.clrPrimary = this.dir > 0 ? Projectile.colorShip : Projectile.colorInvader;
           this.move();
           this.checkCollision();
         }
@@ -52,8 +56,9 @@ namespace SpaceInvaders {
       }
 
       private checkCollision(): void {
-        this.collides(InvaderWave.instance);
         this.collides(BarricadeFormation.instance);
+        if (this.dir > 0) this.collides(InvaderWave.instance);
+        else this.collides(Ship.instance);
       }
     }
   }
