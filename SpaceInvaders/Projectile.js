@@ -4,30 +4,44 @@ var SpaceInvaders;
     var ƒ = FudgeCore;
     class Projectile extends SpaceInvaders.QuadNode {
         constructor() {
-            super("Projectile" + (++Projectile.count), ƒ.Vector2.ZERO(), new ƒ.Vector2(1 / 13, 5 / 13));
-            this.vel = 10 / 1000;
-            this.borderTop = 13;
-            this.borderBot = -1;
+            super("Projectile" + (++Projectile.count), ƒ.Vector2.ZERO(), new ƒ.Vector2(1, 5));
+            this.vel = 130 / 1000;
             this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
+            this.activate(false);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, (_event) => this.update(_event));
         }
+        get dir() {
+            return this._dir;
+        }
         fire(_pos, _dir) {
-            this.mtxLocal.translation = _pos;
-            this.dir = _dir < 0 ? -1 : 1;
+            this.mtxLocal.translateX(_pos.x - this.mtxLocal.translation.x);
+            this.mtxLocal.translateY(_pos.y - this.mtxLocal.translation.y);
+            this._dir = _dir;
             this.activate(true);
         }
-        activate(_on) {
-            super.activate(_on);
-            if (!_on)
-                this.onDeactivate?.call(null);
+        onCollision(_other) {
+            if (_other instanceof SpaceInvaders.Invader || _other instanceof SpaceInvaders.BarricadeStripe) {
+                this.activate(false);
+            }
+            this.getComponent(ƒ.ComponentMaterial).clrPrimary = SpaceInvaders.MotherShip.color;
         }
         update(_event) {
             if (this.isActive) {
-                this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
-                // deactivate projectile if it passes the borders
-                if (this.mtxLocal.translation.y > this.borderTop || this.mtxLocal.translation.y < this.borderBot)
-                    this.activate(false);
+                this.getComponent(ƒ.ComponentMaterial).clrPrimary = Projectile.color;
+                this.move();
+                this.checkCollision();
             }
+        }
+        move() {
+            this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
+            this.mtxWorld.translation = this.mtxLocal.translation;
+            if (this.mtxLocal.translation.y > SpaceInvaders.border.top || this.mtxLocal.translation.y < SpaceInvaders.border.bottom) {
+                this.activate(false);
+            }
+        }
+        checkCollision() {
+            this.collides(SpaceInvaders.InvaderWave.instance);
+            this.collides(SpaceInvaders.BarricadeFormation.instance);
         }
     }
     Projectile.color = new ƒ.Color(0.2, 0.8, 1, 1);

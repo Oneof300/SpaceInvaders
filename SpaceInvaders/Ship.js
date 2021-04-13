@@ -2,23 +2,20 @@
 var SpaceInvaders;
 (function (SpaceInvaders) {
     var ƒ = FudgeCore;
-    class Ship extends ƒ.Node {
+    class Ship extends SpaceInvaders.QuadNode {
         constructor() {
-            super("Ship");
-            this.vel = 10 / 1000;
-            this.moveRange = 91 / 13;
-            this.dir = 0;
+            super("Ship", ƒ.Vector2.ZERO(), new ƒ.Vector2(13, 7));
+            this.vel = 130 / 1000;
+            this.dir = SpaceInvaders.HorizontalDirection.none;
             this.moveLeftKeys = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
             this.moveRightKeys = [ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D];
             this.moveKeys = this.moveLeftKeys.concat(this.moveRightKeys);
             this.fireKeys = [ƒ.KEYBOARD_CODE.SPACE];
             this.interestingKeys = this.moveKeys.concat(this.fireKeys);
             this.pressedKeys = new Array();
-            this.ship = new SpaceInvaders.QuadNode("Ship", ƒ.Vector2.ZERO(), new ƒ.Vector2(1, 7 / 13));
-            this.ship.getComponent(ƒ.ComponentMaterial).clrPrimary = Ship.color;
-            this.addChild(this.ship);
+            this.getComponent(ƒ.ComponentMaterial).clrPrimary = Ship.color;
             this.projectiles = new SpaceInvaders.ProjectilePool(3);
-            this.addChild(this.projectiles);
+            SpaceInvaders.space.addChild(this.projectiles);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, (_event) => this.update(_event));
             window.addEventListener("keydown", (_event) => this.handleKeyDown(_event));
             window.addEventListener("keyup", (_event) => this.handleKeyUp(_event));
@@ -29,16 +26,21 @@ var SpaceInvaders;
             return this._instance;
         }
         update(_event) {
-            if (this.dir != 0) {
-                let translationX = this.dir * this.vel * ƒ.Loop.timeFrameReal;
-                let newPosX = this.ship.mtxLocal.translation.x + translationX;
-                // if the new position would exceed the move range, set the translation to the remaining distance to the border
-                if (newPosX < -this.moveRange)
-                    translationX = -this.moveRange - this.ship.mtxLocal.translation.x;
-                else if (newPosX > this.moveRange)
-                    translationX = this.moveRange - this.ship.mtxLocal.translation.x;
-                this.ship.mtxLocal.translateX(translationX);
+            if (this.dir != SpaceInvaders.HorizontalDirection.none) {
+                this.move();
             }
+        }
+        move() {
+            this.mtxLocal.translateX(this.dir * this.vel * ƒ.Loop.timeFrameReal);
+            if (this.mtxLocal.translation.x > SpaceInvaders.border.right) {
+                this.mtxLocal.translateX(SpaceInvaders.border.right - this.mtxLocal.translation.x);
+            }
+            else if (this.mtxLocal.translation.x < SpaceInvaders.border.left) {
+                this.mtxLocal.translateX(SpaceInvaders.border.left - this.mtxLocal.translation.x);
+            }
+        }
+        fire() {
+            this.projectiles.fireProjectile(this.mtxWorld.translation.toVector2(), SpaceInvaders.VerticalDirection.up);
         }
         handleKeyDown(_event) {
             // if we are interested in that key and it wasn't already pressed, add it to the pressed keys
@@ -46,9 +48,9 @@ var SpaceInvaders;
                 this.pressedKeys.push(_event.code);
                 // execute the appropriate actiong
                 if (this.moveLeftKeys.includes(_event.code))
-                    this.move(-1);
+                    this.dir = SpaceInvaders.HorizontalDirection.left;
                 else if (this.moveRightKeys.includes(_event.code))
-                    this.move(1);
+                    this.dir = SpaceInvaders.HorizontalDirection.right;
                 else if (this.fireKeys.includes(_event.code))
                     this.fire();
             }
@@ -69,21 +71,15 @@ var SpaceInvaders;
                     // move in the direction of the last key pressed
                     if (lastMoveKey != undefined) {
                         if (this.moveLeftKeys.includes(lastMoveKey))
-                            this.move(-1);
+                            this.dir = SpaceInvaders.HorizontalDirection.left;
                         else
-                            this.move(1);
+                            this.dir = SpaceInvaders.HorizontalDirection.right;
                     }
                     // stop if no key to move is currently pressed
                     else
-                        this.move(0);
+                        this.dir = SpaceInvaders.HorizontalDirection.none;
                 }
             }
-        }
-        fire() {
-            this.projectiles.fireProjectile(this.ship.mtxLocal.translation, 1);
-        }
-        move(_dir) {
-            this.dir = _dir < 0 ? -1 : _dir > 0 ? 1 : 0;
         }
     }
     Ship.color = new ƒ.Color(0, 0.5, 1, 1);

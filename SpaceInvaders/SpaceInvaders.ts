@@ -1,48 +1,25 @@
 namespace SpaceInvaders {
   import ƒ = FudgeCore;
-  window.addEventListener("load", init);
+
+  export const space: ƒ.Node = new ƒ.Node("Space");
+  export let border: Rectangle = new Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(182, 182));
+
   let viewport: ƒ.Viewport = new ƒ.Viewport();
+  window.addEventListener("load", init);
 
   function init(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
 
-    let space: ƒ.Node = new ƒ.Node("Space");
+    console.log(border);
     
     space.addChild(Ship.instance);
     space.addChild(MotherShip.instance);
-
-    let invaders: ƒ.Node = new ƒ.Node("Invaders");
-    let columnCount: number = 11;
-    let rowCount: number = 5;
-
-    for (let row: number = 0; row < rowCount; ++row) {
-      for (let column: number = 0; column < columnCount; ++column) {
-        let pos: ƒ.Vector2 = new ƒ.Vector2();
-        pos.x = (column - (columnCount - 1) / 2) * 16 / 13;
-        pos.y = (row * 16 + 65) / 13;
-
-        invaders.addChild(new Invader(pos));
-      }
-    }
-
-    space.addChild(invaders);
-
-    let barricades: ƒ.Node = new ƒ.Node("Barricades");
-    let barricadeCount: number = 4;
-
-    for (let barricadeIndex: number = 0; barricadeIndex < barricadeCount; ++barricadeIndex) {
-      let pos: ƒ.Vector2 = new ƒ.Vector2();
-      pos.x = (barricadeIndex - (barricadeCount - 1) / 2) * 48 / 13;
-      pos.y = 24 / 13;
-      
-      barricades.addChild(new Barricade(pos));
-    }
-
-    space.addChild(barricades);
+    space.addChild(InvaderWave.createWave(new ƒ.Vector2(0, 100), 5, 11, 16));
+    space.addChild(BarricadeFormation.createFormation(new ƒ.Vector2(0, 24.5), 4, 48));
 
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-    cmpCamera.mtxPivot.translateZ(18);
-    cmpCamera.mtxPivot.translateY(77 / 13);
+    cmpCamera.mtxPivot.translateZ(234);
+    cmpCamera.mtxPivot.translateY(77);
     cmpCamera.mtxPivot.rotateY(180);
     cmpCamera.mtxPivot.scaleX(1);
     console.log(cmpCamera);
@@ -57,7 +34,6 @@ namespace SpaceInvaders {
   }
 
   function update(_event: Event): void {
-    // console.log(_event);
     viewport.draw();
   }
 }

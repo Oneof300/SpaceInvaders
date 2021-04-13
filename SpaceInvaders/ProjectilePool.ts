@@ -7,24 +7,12 @@ namespace SpaceInvaders {
         super("ProjectilePool");
 
         for (let i: number = 0; i < _size; ++i) {
-          let projectile: Projectile = new Projectile();
-          projectile.activate(false);
-          this.addChild(projectile);
+          this.addChild(new Projectile());
         }
       }
 
-      fireProjectile(_pos: ƒ.Vector3, _dir: number): void {
-        let inactiveProjectile: Projectile;
-
-        // try to find an inactive projectile
-        for (let projectile of this.getChildren()) {
-          if (!projectile.isActive) {
-            inactiveProjectile = <Projectile>projectile;
-            break;
-          }
-        }
-
-        if (inactiveProjectile != undefined) inactiveProjectile.fire(_pos, _dir);
+      fireProjectile(_pos: ƒ.Vector2, _dir: VerticalDirection): void {
+        (this.getChildren().find(p => !p.isActive) as Projectile)?.fire(_pos, _dir);
       }
     }
   }

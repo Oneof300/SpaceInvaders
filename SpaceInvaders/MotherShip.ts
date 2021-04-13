@@ -6,7 +6,7 @@ namespace SpaceInvaders {
       private static _instance: MotherShip;
   
       private constructor() {  
-        super("MotherShip", new ƒ.Vector2(75 / 13, 140 / 13), new ƒ.Vector2(14 / 13, 7 / 13));
+        super("MotherShip", new ƒ.Vector2(75, 140), new ƒ.Vector2(14, 7));
         this.getComponent(ƒ.ComponentMaterial).clrPrimary = MotherShip.color;
       }
 

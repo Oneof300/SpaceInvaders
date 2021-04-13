@@ -6,22 +6,11 @@ var SpaceInvaders;
         constructor(_size) {
             super("ProjectilePool");
             for (let i = 0; i < _size; ++i) {
-                let projectile = new SpaceInvaders.Projectile();
-                projectile.activate(false);
-                this.addChild(projectile);
+                this.addChild(new SpaceInvaders.Projectile());
             }
         }
         fireProjectile(_pos, _dir) {
-            let inactiveProjectile;
-            // try to find an inactive projectile
-            for (let projectile of this.getChildren()) {
-                if (!projectile.isActive) {
-                    inactiveProjectile = projectile;
-                    break;
-                }
-            }
-            if (inactiveProjectile != undefined)
-                inactiveProjectile.fire(_pos, _dir);
+            this.getChildren().find(p => !p.isActive)?.fire(_pos, _dir);
         }
     }
     SpaceInvaders.ProjectilePool = ProjectilePool;
