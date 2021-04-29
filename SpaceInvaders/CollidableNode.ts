@@ -73,6 +73,18 @@ namespace SpaceInvaders {
       return false;
     }
 
+    getChildren(): CollidableNode[] {
+      return super.getChildren() as CollidableNode[];
+    }
+
+    getActiveChildren(): CollidableNode[] {
+      return this.getChildren().filter(inv => inv.isActive);
+    }
+
+    getActiveChild(_index: number): CollidableNode {
+      return this.getActiveChildren()[_index];
+    }
+
     protected onCollision?(_other: CollidableNode): void;
     protected onCollisionBoxChanged?(_collisionBox: Rectangle): void;
 

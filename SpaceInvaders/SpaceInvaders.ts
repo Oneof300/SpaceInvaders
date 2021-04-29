@@ -1,29 +1,43 @@
 namespace SpaceInvaders {
   import ƒ = FudgeCore;
 
-  export const space: ƒ.Node = new ƒ.Node("Space");
-  export const border: Rectangle = new Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(194, 182));
-  export let gameState: GameState = GameState.running;
-
   let viewport: ƒ.Viewport = new ƒ.Viewport();
   window.addEventListener("load", init);
+
+  let rect: ƒ.Rectangle = new ƒ.Rectangle(0, 0, 10, 10);
+  rect.right = rect.left + 10;
+  console.log("bottom:", rect.bottom, "top:", rect.top, "left:", rect.left, "right:", rect.right);
 
   function init(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
 
-    console.log(border);
+    Game.properties = new GameProperties({
+      ships: 3,
+      ship: new ShipProperties({
+        velocity: 0.15,
+        projectiles: 2,
+        projectileVelocity: 0.15
+      }),
+      invaderWave: new InvaderWaveProperties({
+        startPosition: new ƒ.Vector2(0, 96),
+        columns: 11,
+        rows: 5,
+        spacing: 16,
+        velocityMax: 0.3,
+        projectiles: 3,
+        projectileVelocity: 0.05
+      }),
+      barricadeFormation: new BarricadeFormationProperties({
+        position: new ƒ.Vector2(0, 16),
+        barricades: 4,
+        spacing: 48
+      })
+    });
 
-    space.addChild(Ship.instance);
-    space.addChild(MotherShip.instance);
-    space.addChild(InvaderWave.createWave(new ƒ.Vector2(0, 96), 5, 11, 16));
-    space.addChild(BarricadeFormation.createFormation(new ƒ.Vector2(0, 16), 4, 48));
-    
-    Ship.instance.vel = 0.2;
-    Ship.instance.projectiles.size = 2;
-    Ship.instance.projectileVel = 0.15;
-    InvaderWave.instance.velMax = 0.4;
-    InvaderWave.instance.projectiles.size = 2;
-    InvaderWave.instance.projectileVel = 0.1;
+    Space.addChild(Ship.instance);
+    Space.addChild(MotherShip.instance);
+    Space.addChild(InvaderWave.instance);
+    Space.addChild(BarricadeFormation.instance);
 
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     cmpCamera.mtxPivot.translateZ(234);
@@ -32,10 +46,10 @@ namespace SpaceInvaders {
     cmpCamera.mtxPivot.scaleX(1);
     console.log(cmpCamera);
 
-    viewport.initialize("Viewport", space, cmpCamera, canvas);
+    viewport.initialize("Viewport", Space.node, cmpCamera, canvas);
     viewport.draw();
 
-    console.log(space);
+    console.log(Space.node);
 
     ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);

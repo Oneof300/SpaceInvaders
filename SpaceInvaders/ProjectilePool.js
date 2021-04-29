@@ -24,6 +24,9 @@ var SpaceInvaders;
         fireProjectile(_pos, _dir, _vel) {
             this.getChildren().find(p => !p.isActive)?.fire(_pos, _dir, _vel);
         }
+        reset() {
+            this.getChildren().forEach(projectile => projectile.activate(false));
+        }
     }
     SpaceInvaders.ProjectilePool = ProjectilePool;
 })(SpaceInvaders || (SpaceInvaders = {}));

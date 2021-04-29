@@ -50,29 +50,33 @@ namespace SpaceInvaders {
       return this.position.x + this.offset.x;
     }
     set left(_value: number) {
-      let difference: number = _value - this.left;
-      this.offset.x += difference;
-      this.size.x -= difference;
+      if (_value < this.right) {
+        let difference: number = _value - this.left;
+        this.offset.x += difference;
+        this.size.x -= difference;
+      }
     }
     get right(): number {
       return this.left + this.width;
     }
     set right(_value: number) {
-      this.size.x += _value - this.right;
+      if (_value > this.left) this.size.x += _value - this.right;
     }
     get bottom(): number {
       return this.position.y + this.offset.y;
     }
     set bottom(_value: number) {
-      let difference: number = _value - this.bottom;
-      this.offset.y += difference;
-      this.size.y -= difference;
+      if (_value < this.top) {
+        let difference: number = _value - this.bottom;
+        this.offset.y += difference;
+        this.size.y -= difference;
+      }
     }
     get top(): number {
       return this.bottom + this.height;
     }
     set top(_value: number) {
-      this.size.y += _value - this.top;
+      if (_value > this.bottom) this.size.y += _value - this.top;
     }
     isInside(_point: ƒ.Vector2): boolean {
       throw new Error("Method not implemented.");

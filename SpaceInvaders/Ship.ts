@@ -3,13 +3,16 @@ namespace SpaceInvaders {
     
     export class Ship extends QuadNode {
       static readonly color: ƒ.Color = new ƒ.Color(0, 0.5, 1, 1);
+      static readonly texture: ƒ.TextureImage = new ƒ.TextureImage("./Textures/Ship.png");
+      static readonly coat: ƒ.CoatTextured = new ƒ.CoatTextured(Ship.color, Ship.texture);
+      static readonly mtr: ƒ.Material = new ƒ.Material("ShipMat", ƒ.ShaderTexture, Ship.coat);
+
       private static _instance: Ship;
 
-      vel: number = 0.15;
-      projectiles: ProjectilePool = new ProjectilePool(1);
-      projectileVel: number = 0.15;
+      vel: number = Game.properties.ship.velocity;
+      projectiles: ProjectilePool = new ProjectilePool(Game.properties.ship.projectiles);
+      projectileVel: number = Game.properties.ship.projectileVelocity;
 
-      private shipsLeft: number = 3;
       private dir: HorizontalDirection = HorizontalDirection.none;
 
       private readonly moveLeftKeys: string[] = [ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A];
@@ -22,8 +25,8 @@ namespace SpaceInvaders {
       private constructor() {
         super("Ship", ƒ.Vector2.ZERO(), new ƒ.Vector2(13, 7));
 
-        this.getComponent(ƒ.ComponentMaterial).clrPrimary = Ship.color;
-        space.addChild(this.projectiles);
+        this.getComponent(ƒ.ComponentMaterial).material = Ship.mtr;
+        Space.addChild(this.projectiles);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, (_event) => this.update(_event));
         window.addEventListener("keydown", (_event) => this.handleKeyDown(_event));
@@ -35,16 +38,25 @@ namespace SpaceInvaders {
         return this._instance;
       }
 
+      reset(_clearProjectiles: boolean = false): void {
+        this.mtxLocal.translateX(-this.mtxLocal.translation.x);
+        this.activate(true);
+        if (_clearProjectiles) this.projectiles.reset();
+      }
+
       protected onCollision(_other: CollidableNode): void {
         if (_other instanceof Projectile || _other instanceof Invader) {
-          if (--this.shipsLeft <= 0) gameState = GameState.over;
-          else this.mtxLocal.translateX(-this.mtxWorld.translation.x);
-          console.log("Ship got destroyed");
+          Game.reduceShips();
+          if (Game.isRunning) {
+            Game.pause(1000);
+            this.reset();
+          }
+          else this.activate(false);
         }
       }
 
       private update(_event: Event): void {
-        if (gameState == GameState.running && this.dir != HorizontalDirection.none) {
+        if (Game.isRunning && this.dir != HorizontalDirection.none) {
           this.move();
         }
       }
@@ -53,11 +65,11 @@ namespace SpaceInvaders {
         this.mtxLocal.translateX(this.dir * this.vel * ƒ.Loop.timeFrameReal);
         this.mtxWorld.translation = this.mtxLocal.translation;
 
-        if (this.right > border.right) {
-          this.mtxLocal.translateX(border.right - this.right);
+        if (this.right > Space.border.right) {
+          this.mtxLocal.translateX(Space.border.right - this.right);
         }
-        else if (this.left < border.left) {
-          this.mtxLocal.translateX(border.left - this.left);
+        else if (this.left < Space.border.left) {
+          this.mtxLocal.translateX(Space.border.left - this.left);
         }
       }
 
@@ -73,7 +85,7 @@ namespace SpaceInvaders {
           // execute the appropriate actiong
           if (this.moveLeftKeys.includes(_event.code)) this.dir = HorizontalDirection.left;
           else if (this.moveRightKeys.includes(_event.code)) this.dir = HorizontalDirection.right;
-          else if (this.fireKeys.includes(_event.code)) this.fire();
+          else if (this.fireKeys.includes(_event.code) && Game.isRunning) this.fire();
         }
       }
 

@@ -67,6 +67,15 @@ var SpaceInvaders;
             }
             return false;
         }
+        getChildren() {
+            return super.getChildren();
+        }
+        getActiveChildren() {
+            return this.getChildren().filter(inv => inv.isActive);
+        }
+        getActiveChild(_index) {
+            return this.getActiveChildren()[_index];
+        }
         updateCollisionBoxPosition() {
             this.collisionBox.x = this.mtxWorld.translation.x;
             this.collisionBox.y = this.mtxWorld.translation.y;

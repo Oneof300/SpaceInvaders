@@ -44,29 +44,35 @@ var SpaceInvaders;
             return this.position.x + this.offset.x;
         }
         set left(_value) {
-            let difference = _value - this.left;
-            this.offset.x += difference;
-            this.size.x -= difference;
+            if (_value < this.right) {
+                let difference = _value - this.left;
+                this.offset.x += difference;
+                this.size.x -= difference;
+            }
         }
         get right() {
             return this.left + this.width;
         }
         set right(_value) {
-            this.size.x += _value - this.right;
+            if (_value > this.left)
+                this.size.x += _value - this.right;
         }
         get bottom() {
             return this.position.y + this.offset.y;
         }
         set bottom(_value) {
-            let difference = _value - this.bottom;
-            this.offset.y += difference;
-            this.size.y -= difference;
+            if (_value < this.top) {
+                let difference = _value - this.bottom;
+                this.offset.y += difference;
+                this.size.y -= difference;
+            }
         }
         get top() {
             return this.bottom + this.height;
         }
         set top(_value) {
-            this.size.y += _value - this.top;
+            if (_value > this.bottom)
+                this.size.y += _value - this.top;
         }
         isInside(_point) {
             throw new Error("Method not implemented.");

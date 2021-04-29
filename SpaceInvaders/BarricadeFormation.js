@@ -10,16 +10,17 @@ var SpaceInvaders;
             }
         }
         static get instance() {
+            if (this._instance == undefined) {
+                this._instance = new BarricadeFormation(SpaceInvaders.Game.properties.barricadeFormation.position, SpaceInvaders.Game.properties.barricadeFormation.barricades, SpaceInvaders.Game.properties.barricadeFormation.spacing);
+            }
             return this._instance;
         }
-        static createFormation(_pos, _barricadeCount, _spacing) {
-            if (this._instance != undefined)
-                delete this._instance;
-            return this._instance = new BarricadeFormation(_pos, _barricadeCount, _spacing);
+        reset() {
+            this.getChildren().forEach(barricade => barricade.reset());
         }
         onCollision(_other) {
             if (_other instanceof SpaceInvaders.Projectile) {
-                this.getChildren().some(barricade => barricade.collides(_other));
+                this.getChildren().find(barricade => barricade.collides(_other));
             }
         }
     }

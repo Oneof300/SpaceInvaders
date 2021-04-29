@@ -2,33 +2,48 @@
 var SpaceInvaders;
 (function (SpaceInvaders) {
     var ƒ = FudgeCore;
-    SpaceInvaders.space = new ƒ.Node("Space");
-    SpaceInvaders.border = new SpaceInvaders.Rectangle(new ƒ.Vector2(0, 78), new ƒ.Vector2(194, 182));
-    SpaceInvaders.gameState = SpaceInvaders.GameState.running;
     let viewport = new ƒ.Viewport();
     window.addEventListener("load", init);
+    let rect = new ƒ.Rectangle(0, 0, 10, 10);
+    rect.right = rect.left + 10;
+    console.log("bottom:", rect.bottom, "top:", rect.top, "left:", rect.left, "right:", rect.right);
     function init(_event) {
         const canvas = document.querySelector("canvas");
-        console.log(SpaceInvaders.border);
-        SpaceInvaders.space.addChild(SpaceInvaders.Ship.instance);
-        SpaceInvaders.space.addChild(SpaceInvaders.MotherShip.instance);
-        SpaceInvaders.space.addChild(SpaceInvaders.InvaderWave.createWave(new ƒ.Vector2(0, 96), 5, 11, 16));
-        SpaceInvaders.space.addChild(SpaceInvaders.BarricadeFormation.createFormation(new ƒ.Vector2(0, 16), 4, 48));
-        SpaceInvaders.Ship.instance.vel = 0.2;
-        SpaceInvaders.Ship.instance.projectiles.size = 2;
-        SpaceInvaders.Ship.instance.projectileVel = 0.15;
-        SpaceInvaders.InvaderWave.instance.velMax = 0.4;
-        SpaceInvaders.InvaderWave.instance.projectiles.size = 2;
-        SpaceInvaders.InvaderWave.instance.projectileVel = 0.1;
+        SpaceInvaders.Game.properties = new SpaceInvaders.GameProperties({
+            ships: 3,
+            ship: new SpaceInvaders.ShipProperties({
+                velocity: 0.15,
+                projectiles: 2,
+                projectileVelocity: 0.15
+            }),
+            invaderWave: new SpaceInvaders.InvaderWaveProperties({
+                startPosition: new ƒ.Vector2(0, 96),
+                columns: 11,
+                rows: 5,
+                spacing: 16,
+                velocityMax: 0.3,
+                projectiles: 3,
+                projectileVelocity: 0.05
+            }),
+            barricadeFormation: new SpaceInvaders.BarricadeFormationProperties({
+                position: new ƒ.Vector2(0, 16),
+                barricades: 4,
+                spacing: 48
+            })
+        });
+        SpaceInvaders.Space.addChild(SpaceInvaders.Ship.instance);
+        SpaceInvaders.Space.addChild(SpaceInvaders.MotherShip.instance);
+        SpaceInvaders.Space.addChild(SpaceInvaders.InvaderWave.instance);
+        SpaceInvaders.Space.addChild(SpaceInvaders.BarricadeFormation.instance);
         let cmpCamera = new ƒ.ComponentCamera();
         cmpCamera.mtxPivot.translateZ(234);
         cmpCamera.mtxPivot.translateY(77);
         cmpCamera.mtxPivot.rotateY(180);
         cmpCamera.mtxPivot.scaleX(1);
         console.log(cmpCamera);
-        viewport.initialize("Viewport", SpaceInvaders.space, cmpCamera, canvas);
+        viewport.initialize("Viewport", SpaceInvaders.Space.node, cmpCamera, canvas);
         viewport.draw();
-        console.log(SpaceInvaders.space);
+        console.log(SpaceInvaders.Space.node);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
     }

@@ -15,17 +15,23 @@ namespace SpaceInvaders {
       }
 
       static get instance(): BarricadeFormation {
+        if (this._instance == undefined) {
+          this._instance = new BarricadeFormation(
+            Game.properties.barricadeFormation.position,
+            Game.properties.barricadeFormation.barricades,
+            Game.properties.barricadeFormation.spacing
+          );
+        }
         return this._instance;
       }
 
-      static createFormation(_pos: ƒ.Vector2, _barricadeCount: number, _spacing: number): BarricadeFormation {
-        if (this._instance != undefined) delete this._instance;
-        return this._instance = new BarricadeFormation(_pos, _barricadeCount, _spacing);
+      reset(): void {
+        (this.getChildren() as Barricade[]).forEach(barricade => barricade.reset());
       }
 
       protected onCollision(_other: CollidableNode): void {
         if (_other instanceof Projectile) {
-          (this.getChildren() as Barricade[]).some(barricade => barricade.collides(_other));
+          this.getChildren().find(barricade => barricade.collides(_other));
         }
       }
     }

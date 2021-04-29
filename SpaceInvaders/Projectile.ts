@@ -39,7 +39,7 @@ namespace SpaceInvaders {
       }
 
       private update(_event: Event): void {
-        if (this.isActive) {
+        if (this.isActive && Game.isRunning) {
           //this.cmpMaterial.clrPrimary = this.dir > 0 ? Projectile.colorShip : Projectile.colorInvader;
           this.move();
           this.checkCollision();
@@ -50,7 +50,7 @@ namespace SpaceInvaders {
         this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
         this.mtxWorld.translation = this.mtxLocal.translation;
         
-        if (this.mtxLocal.translation.y > border.top || this.mtxLocal.translation.y < border.bottom) {
+        if (this.mtxLocal.translation.y > Space.border.top || this.mtxLocal.translation.y < Space.border.bottom) {
           this.activate(false);
         }
       }

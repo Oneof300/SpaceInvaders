@@ -25,5 +25,9 @@ namespace SpaceInvaders {
       fireProjectile(_pos: ƒ.Vector2, _dir: number, _vel: number): void {
         (this.getChildren().find(p => !p.isActive) as Projectile)?.fire(_pos, _dir, _vel);
       }
+
+      reset(): void {
+        this.getChildren().forEach(projectile => projectile.activate(false));
+      }
     }
   }

@@ -27,7 +27,7 @@ var SpaceInvaders;
             //this.cmpMaterial.clrPrimary = Projectile.colorCollision;
         }
         update(_event) {
-            if (this.isActive) {
+            if (this.isActive && SpaceInvaders.Game.isRunning) {
                 //this.cmpMaterial.clrPrimary = this.dir > 0 ? Projectile.colorShip : Projectile.colorInvader;
                 this.move();
                 this.checkCollision();
@@ -36,7 +36,7 @@ var SpaceInvaders;
         move() {
             this.mtxLocal.translateY(this.dir * this.vel * ƒ.Loop.timeFrameReal);
             this.mtxWorld.translation = this.mtxLocal.translation;
-            if (this.mtxLocal.translation.y > SpaceInvaders.border.top || this.mtxLocal.translation.y < SpaceInvaders.border.bottom) {
+            if (this.mtxLocal.translation.y > SpaceInvaders.Space.border.top || this.mtxLocal.translation.y < SpaceInvaders.Space.border.bottom) {
                 this.activate(false);
             }
         }

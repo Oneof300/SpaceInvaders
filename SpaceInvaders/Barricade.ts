@@ -27,22 +27,21 @@ namespace SpaceInvaders {
         }
       }
 
-      protected onCollision(_other: CollidableNode): void {
-        if (_other instanceof Projectile) {
-          let collidedStripe: BarricadeStripe = (this.getChildren() as BarricadeStripe[]).find(stripe => stripe.collides(_other));
-          
-          if (collidedStripe != undefined) {
-            let collidedStripeIndex: number = this.getChildren().indexOf(collidedStripe);
-            let stripeLeft: BarricadeStripe = (this.getChild(collidedStripeIndex - 1) as BarricadeStripe);
-            let stripeRight0: BarricadeStripe = (this.getChild(collidedStripeIndex + 1) as BarricadeStripe);
-            let stripeRight1: BarricadeStripe = (this.getChild(collidedStripeIndex + 2) as BarricadeStripe);
-            let collidedFromAbove: boolean = _other.dir < 0;
-            
-            if (collidedStripe.shrink(collidedFromAbove, 4)) this.removeChild(collidedStripe);
-            if (stripeLeft != undefined && stripeLeft.shrink(collidedFromAbove, 2)) this.removeChild(stripeLeft);
-            if (stripeRight0 != undefined && stripeRight0.shrink(collidedFromAbove, 4)) this.removeChild(stripeRight0);
-            if (stripeRight1 != undefined && stripeRight1.shrink(collidedFromAbove, 2)) this.removeChild(stripeRight1);
-          }
+      reset(): void {
+        (this.getChildren() as BarricadeStripe[]).forEach(stripe => stripe.reset());
+      }
+
+      protected onCollision(_projectile: Projectile): void {
+        let collidedStripe: BarricadeStripe = this.getActiveChildren().find(stripe => stripe.collides(_projectile)) as BarricadeStripe;
+        
+        if (collidedStripe != undefined) {
+          let collidedFromAbove: boolean = _projectile.dir < 0;
+          let collidedStripeIndex: number = this.getChildren().indexOf(collidedStripe);
+
+          collidedStripe.shrink(collidedFromAbove, 4);
+          (this.getChild(collidedStripeIndex - 1) as BarricadeStripe)?.shrink(collidedFromAbove, 2);
+          (this.getChild(collidedStripeIndex + 1) as BarricadeStripe)?.shrink(collidedFromAbove, 4);
+          (this.getChild(collidedStripeIndex + 2) as BarricadeStripe)?.shrink(collidedFromAbove, 2);
         }
       }
     }
